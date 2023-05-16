@@ -10,14 +10,14 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   // on first page load, fetch data from API
 
-  async function fetchGuests() {
-    setIsLoading(true);
-    const response = await fetch(`${baseUrl}/guests`);
-    const allGuests = await response.json();
-    setGuests(allGuests);
-    setIsLoading(false);
-  }
   useEffect(() => {
+    async function fetchGuests() {
+      setIsLoading(true);
+      const response = await fetch(`${baseUrl}/guests`);
+      const allGuests = await response.json();
+      setGuests(allGuests);
+      setIsLoading(false);
+    }
     fetchGuests().catch((error) => console.log(error));
   }, []);
 
