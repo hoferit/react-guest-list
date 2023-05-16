@@ -19,7 +19,7 @@ export default function App() {
       setIsLoading(false);
     }
     fetchGuests().catch((error) => console.log(error));
-  }, []);
+  }, [guests]);
 
   // create user with API
   async function addGuest() {
