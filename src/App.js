@@ -10,16 +10,13 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   // on first page load, fetch data from API
 
-  useEffect(() => {
-    async function fetchGuests() {
-      setIsLoading(true);
-      const response = await fetch(`${baseUrl}/guests`);
-      const allGuests = await response.json();
-      setGuests(allGuests);
-      setIsLoading(false);
-    }
-    fetchGuests().catch((error) => console.log(error));
-  }, [guests]);
+  async function fetchGuests() {
+    setIsLoading(true);
+    const response = await fetch(`${baseUrl}/guests`);
+    const allGuests = await response.json();
+    setGuests(allGuests);
+    setIsLoading(false);
+  }
 
   // create user with API
   async function addGuest() {
@@ -79,6 +76,7 @@ export default function App() {
       console.log(error);
     }
   }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     await addGuest();
@@ -95,6 +93,11 @@ export default function App() {
       await fetchGuests();
     }
   };
+
+  useEffect(() => {
+    fetchGuests().catch((error) => console.log(error));
+  }, []);
+
   return (
     <main className={styles.mainContainer}>
       <section>
