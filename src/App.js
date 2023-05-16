@@ -18,6 +18,9 @@ export default function App() {
     setIsLoading(false);
   }
 
+  useEffect(() => {
+    fetchGuests().catch((error) => console.log(error));
+  }, []);
   // create user with API
   async function addGuest() {
     try {
@@ -33,7 +36,9 @@ export default function App() {
         }),
       });
       const createdGuest = await response.json();
-      return createdGuest;
+      setGuests([...guests, createdGuest]);
+      setFirstName('');
+      setLastName('');
     } catch (error) {
       console.log(error);
     }
@@ -41,22 +46,21 @@ export default function App() {
   // update user with API
   async function updateGuest(id) {
     try {
-      const guestToUpdate = guests.find((guest) => guest.id === id); // find method to get the unique guest id
       const response = await fetch(`${baseUrl}/guests/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ attending: !guestToUpdate.attending }), // change attending status to opposite
+        body: JSON.stringify({
+          attending: !guests.find((guest) => guest.id === id).attending,
+        }), // change attending status to opposite
       });
       const updatedGuest = await response.json();
-      const updatedGuests = guests.map((guest) => {
-        if (guest.id === updatedGuest.id) {
-          return updatedGuest;
-        } else {
-          return guest;
-        }
-      });
+      const updatedGuests = guests.map((guest) =>
+        guest.id === updatedGuest.id
+          ? { ...guest, attending: updatedGuest.attending }
+          : guest,
+      );
       setGuests(updatedGuests);
     } catch (error) {
       console.log(error);
@@ -77,12 +81,8 @@ export default function App() {
     }
   }
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    await addGuest();
-    setFirstName('');
-    setLastName('');
-    await fetchGuests();
   };
   const handleKeyPress = async (event) => {
     if (event.key === 'Enter') {
@@ -93,10 +93,6 @@ export default function App() {
       await fetchGuests();
     }
   };
-
-  useEffect(() => {
-    fetchGuests().catch((error) => console.log(error));
-  }, []);
 
   return (
     <main className={styles.mainContainer}>
@@ -116,7 +112,7 @@ export default function App() {
             Last name
             <input
               value={lastName}
-              placeholder="First name"
+              placeholder="Last name"
               disabled={isLoading}
               onChange={(event) => {
                 setLastName(event.target.value);
@@ -124,7 +120,6 @@ export default function App() {
               onKeyUp={handleKeyPress}
             />
           </label>
-          <button disabled={isLoading}>Add guest</button>
         </form>
       </section>
       {isLoading ? (
