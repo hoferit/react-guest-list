@@ -8,7 +8,6 @@ export default function App() {
   const [lastName, setLastName] = useState('');
   const [guests, setGuests] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
   // on first page load, fetch data from API
 
   async function fetchGuests() {
@@ -138,7 +137,7 @@ export default function App() {
               >
                 <div>
                   <input
-                    aria-label={`attenting ${guest.firstName} ${guest.lastName}`}
+                    aria-label={`${guest.firstName} ${guest.lastName} attending status`}
                     type="checkbox"
                     checked={guest.attending}
                     onChange={() => {
