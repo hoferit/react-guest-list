@@ -3,8 +3,7 @@ import styles from './App.module.scss';
 
 export default function App() {
   // API Setup
-  // const baseUrl = 'https://6aa40e58-63d5-4116-8244-355803782cc0.id.repl.co';
-  const baseUrl = 'http://localhost:4000';
+  const baseUrl = 'https://6aa40e58-63d5-4116-8244-355803782cc0.id.repl.co';
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [guests, setGuests] = useState([]);
@@ -46,13 +45,13 @@ export default function App() {
   // update user with API
   async function updateGuest(id) {
     try {
-      const guestToUpdate = guests.find((guest) => guest.id === id); // find the needed guest to update
+      const guestToUpdate = guests.find((guest) => guest.id === id); // find method to get the unique guest id
       const response = await fetch(`${baseUrl}/guests/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ attending: !guestToUpdate.attending }), // change attending status
+        body: JSON.stringify({ attending: !guestToUpdate.attending }), // change attending status to opposite
       });
       const updatedGuest = await response.json();
       const updatedGuests = guests.map((guest) => {
@@ -81,16 +80,16 @@ export default function App() {
       console.log(error);
     }
   }
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     await addGuest();
     setFirstName('');
     setLastName('');
     await fetchGuests();
   };
-  const handleKeyPress = async (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
+  const handleKeyPress = async (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
       await addGuest();
       setFirstName('');
       setLastName('');
@@ -108,7 +107,7 @@ export default function App() {
               value={firstName}
               placeholder="First name"
               disabled={isLoading}
-              onChange={(e) => setFirstName(e.target.value)}
+              onChange={(event) => setFirstName(event.target.value)}
             />
           </label>
           <label>
@@ -117,8 +116,8 @@ export default function App() {
               value={lastName}
               placeholder="First name"
               disabled={isLoading}
-              onChange={(e) => {
-                setLastName(e.target.value);
+              onChange={(event) => {
+                setLastName(event.target.value);
               }}
               onKeyUp={handleKeyPress}
             />
